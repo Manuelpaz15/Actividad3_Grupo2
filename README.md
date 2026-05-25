@@ -111,11 +111,58 @@ Utilizados para simular la entrada (pulsador izquierdo) y la salida (pulsador de
 ### Sensor PIR (Infrarrojo pasivo)
 Utilizado para detectar movimiento en las proximidades del ascensor, activando la iluminación de forma automática incluso antes de que los usuarios entren. La selección de estos componentes se ha realizado buscando un equilibrio entre simplicidad, funcionalidad y adecuación a los objetivos del sistema.
 
-## Persistencia de configuración mediante EEPROM
+## Mejoras implementadas en la Actividad 3
+ 
+### Optimización de la pantalla LCD
+ 
+Se ha optimizado la actualización de la pantalla LCD con el objetivo de eliminar el parpadeo producido por el refresco continuo de la información mostrada.
+ 
+Para ello, se ha evitado el uso de `lcd.clear()` durante el funcionamiento normal del sistema y se ha implementado una actualización selectiva únicamente cuando se detectan cambios en las variables mostradas, como la planta actual, el número de personas, la temperatura, la humedad o el estado del ascensor.
+ 
+Esta mejora reduce el número de operaciones realizadas por el microcontrolador, mejora la fluidez visual de la interfaz HMI y proporciona una experiencia de usuario más estable y profesional.
+ 
+---
+ 
+### Mejora del control de ventilación mediante histéresis
+ 
+Se ha perfeccionado el sistema automático de ventilación mediante la implementación de una lógica de histéresis, evitando activaciones y desactivaciones continuas del sistema cuando las variables ambientales se encuentran próximas a los umbrales definidos.
+ 
+La ventilación se activa cuando:
 
-Se ha implementado el uso de la memoria EEPROM interna del Arduino UNO para almacenar parámetros importantes del sistema, como la última planta registrada y configuraciones de funcionamiento.
+- La temperatura supera los 26 ºC.
 
-Esta mejora permite conservar información crítica incluso tras reinicios o pérdidas de alimentación, simulando un comportamiento más próximo a sistemas industriales reales.
+- La temperatura desciende por debajo de 19 ºC.
+
+- La humedad supera el 85 %.
+ 
+Una vez activada, la ventilación permanece funcionando hasta que las condiciones ambientales regresan a una zona segura:
+
+- Temperatura entre 21 ºC y 24 ºC.
+
+- Humedad inferior al 80 %.
+ 
+Este comportamiento mejora la estabilidad del sistema y reduce el desgaste de los actuadores, simulando estrategias de control utilizadas en sistemas industriales reales.
+ 
+---
+ 
+### Optimización y modularización del firmware
+ 
+Se ha reorganizado el firmware siguiendo una arquitectura modular basada en funciones independientes para cada subsistema del proyecto:
+
+- Control del ascensor.
+
+- Gestión ambiental.
+
+- Visualización HMI.
+
+- Control de iluminación.
+
+- Gestión de sobrecarga.
+
+- Señalización visual y acústica.
+ 
+Además, se ha utilizado la función `millis()` para gestionar temporizaciones sin bloquear la ejecución del sistema, permitiendo el funcionamiento simultáneo y coordinado de todos los módulos implementados.
+ 
 
 ## Funcionamiento del sistema
 
